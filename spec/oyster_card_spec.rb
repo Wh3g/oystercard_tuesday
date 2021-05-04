@@ -35,16 +35,22 @@ describe OysterCard do
   end
 
   describe "#touch_in" do
+    let(:station) {double("Station", :name => "Holland Park")}
     context "with sufficient funds" do
       it "begins journey" do
         subject.top_up(50)
-        subject.touch_in
+        subject.touch_in(station)
         expect(subject.in_journey?).to eq true
+      end
+      it "saves the entry station" do
+        subject.top_up(10)
+        subject.touch_in(station)
+        expect(subject.entry_station).to eq station.name
       end
     end
     context "when balance less than £1" do
       it "raises an error" do
-        expect { subject.touch_in }.to raise_error "Insufficient funds."
+        expect { subject.touch_in(station) }.to raise_error "Insufficient funds."
       end
     end
   end
@@ -52,7 +58,6 @@ describe OysterCard do
   describe "#touch_out" do
     it "ends journey" do
       subject.top_up(50)
-      subject.touch_in
       subject.touch_out
       expect(subject.in_journey?).to eq false
     end
