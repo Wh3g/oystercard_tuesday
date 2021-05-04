@@ -35,14 +35,23 @@ describe OysterCard do
   end
 
   describe "#touch_in" do
-    it "begins journey" do
-      subject.touch_in
-      expect(subject.in_journey?).to eq true
+    context "with sufficient funds" do
+      it "begins journey" do
+        subject.top_up(50)
+        subject.touch_in
+        expect(subject.in_journey?).to eq true
+      end
+    end
+    context "when balance less than £1" do
+      it "raises an error" do
+        expect { subject.touch_in }.to raise_error "Insufficient funds."
+      end
     end
   end
 
   describe "#touch_out" do
     it "ends journey" do
+      subject.top_up(50)
       subject.touch_in
       subject.touch_out
       expect(subject.in_journey?).to eq false
