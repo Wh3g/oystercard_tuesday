@@ -19,11 +19,33 @@ describe OysterCard do
       end
     end
   end
+
   describe "#deduct" do
     it "deducts money from the balance" do
       subject.top_up(50)
       subject.deduct(25)
       expect(subject.balance).to eq(25)
+    end
+  end
+
+  describe "#in_journey?" do
+    it "returns false when not travelled" do
+      expect(subject.in_journey?).to eq false
+    end
+  end
+
+  describe "#touch_in" do
+    it "begins journey" do
+      subject.touch_in
+      expect(subject.in_journey?).to eq true
+    end
+  end
+
+  describe "#touch_out" do
+    it "ends journey" do
+      subject.touch_in
+      subject.touch_out
+      expect(subject.in_journey?).to eq false
     end
   end
 end
